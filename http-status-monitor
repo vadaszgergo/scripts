@@ -3,7 +3,8 @@
 # Check if website sends HTTP 200 OK
 # Do the check in every 2 seconds
 # Use the URL as first parameter and http code as second parameter when executing the script
-# Example: user@pc:~$ ./http-monitor.bs https://www.google.com 200
+# Example: ./http-monitor.bs https://www.google.com 200
+# Press Ctrl+C to stop script, otherwise it will run forever
 
 URL=$1
 CODE=$2
