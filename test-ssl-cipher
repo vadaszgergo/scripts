@@ -1,0 +1,30 @@
+#!/bin/bash
+
+# This is based on https://gist.github.com/ilude/1960125
+# Script requires the port number after the URL.
+# Example: ./test-ssl-cipher cnn.com:443
+
+
+URL=$1
+WAIT=0
+ciphers=$(openssl ciphers 'ALL:eNULL' | sed -e 's/:/ /g')
+
+echo Obtaining cipher list from $(openssl version).
+
+for cipher in ${ciphers[@]}
+do
+echo -n Testing $cipher...
+result=$(echo -n | openssl s_client -cipher "$cipher" -connect $URL 2>&1)
+if [[ "$result" =~ ":error:" ]] ; then
+  error=$(echo -n $result | cut -d':' -f6)
+  echo NO \($error\)
+else
+  if [[ "$result" =~ "Cipher is ${cipher}" || "$result" =~ "Cipher    :" ]] ; then
+    echo YES
+  else
+    echo UNKNOWN RESPONSE
+    echo $result
+  fi
+fi
+sleep $WAIT
+done
