@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Check if website sends HTTP 200 OK
-# Do the check in every 2 seconds
+# Do the check in every 3 seconds
 # Use the URL as first parameter and http code as second parameter when executing the script
 # Example: ./http-monitor.bs https://www.google.com 200
 # Press Ctrl+C to stop script, otherwise it will run forever
@@ -10,7 +10,7 @@ URL=$1
 CODE=$2
 while true
 do
-        if [ $(curl -s $URL -k -m 2 -w "%{http_code}" -o /dev/null) == $CODE ]
+        if [ $(curl -s $URL -k -m 3 -w "%{http_code}" -o /dev/null) == $CODE ]
         then
                 tput setaf 2; echo -n 'OK '; date +"%T"
         else
