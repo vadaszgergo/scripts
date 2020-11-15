@@ -1,8 +1,9 @@
 #!/bin/bash
 
-# Check if website sends HTTP 200 OK
+# Check if website sends HTTP 200 OK or any other HTTP code
 # Do the check in every 3 seconds
 # Use the URL as first parameter and http code as second parameter when executing the script
+# Example: script_name URL HTTP_CODE
 # Example: ./http-monitor.bs https://www.google.com 200
 # Press Ctrl+C to stop script, otherwise it will run forever
 
