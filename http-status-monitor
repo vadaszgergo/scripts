@@ -3,9 +3,15 @@
 # Check if website sends HTTP 200 OK or any other HTTP code
 # Do the check in every 3 seconds
 # Use the URL as first parameter and http code as second parameter when executing the script
+# Works with http and https too (note that most websites give you 301 instead of 200 if you try with http instead of https)
+# 
 # Example: script_name URL HTTP_CODE
 # Example: ./http-monitor.bs https://www.google.com 200
+#
 # Press Ctrl+C to stop script, otherwise it will run forever
+#
+# Additional info: due to the "-k" switch in the curl, script will work even with certificate error, so it can be used for URLs with public ip address instead of FQDN
+# Like: ./http-monitor.bs https://34.107.0.144 301 (most pages give http 301 when trying with public ip instead of FQDN)
 
 URL=$1
 CODE=$2
