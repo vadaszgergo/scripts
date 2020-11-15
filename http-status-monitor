@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Check if website sends HTTP 200 OK or any other HTTP code
+# Check if website is up and sends HTTP 200 OK or any other HTTP code
 # Do the check in every 3 seconds
 # Use the URL as first parameter and http code as second parameter when executing the script
 # Works with http and https too (note that most websites give you 301 instead of 200 if you try with http instead of https)
