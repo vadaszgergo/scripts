@@ -3,6 +3,7 @@
 # This is based on https://gist.github.com/ilude/1960125
 # Script requires the port number after the URL.
 # Example: ./test-ssl-cipher cnn.com:443
+#
 
 
 URL=$1
