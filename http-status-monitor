@@ -17,7 +17,7 @@ URL=$1
 CODE=$2
 while true
 do
-        if [ $(curl -s $URL -k -m 3 -w "%{http_code}" -o /dev/null) == $CODE ]
+        if [ $(curl -s -w "%{http_code}" -X POST $URL -k -m 3 -o /dev/null) == $CODE ]
         then
                 tput setaf 2; echo -n 'OK '; date +"%T"
         else
