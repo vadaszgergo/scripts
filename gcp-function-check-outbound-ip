@@ -1,0 +1,50 @@
+main.py:
+#####################################
+import functions_framework
+import requests
+
+@functions_framework.http
+def verify_location(request):
+    # URL to get the public IP address of the instance
+    ip_service_url = "http://checkip.amazonaws.com/"
+    print(1)
+    try:
+        # Get the public IP address
+        ip_response = requests.get(ip_service_url)
+        print(2)
+        if ip_response.status_code == 200:
+            print(3)
+            ip_address = ip_response.text.strip()  # Get the IP address and remove any surrounding whitespace
+            print(4)
+            # Use ipinfo.io to get the location based on the IP address
+            geo_service_url = f"http://ipinfo.io/{ip_address}/json"
+            geo_response = requests.get(geo_service_url)
+            print(geo_response)
+            if geo_response.status_code == 200:
+                print(6)
+                geo_data = geo_response.json()
+                print(7)
+                country = geo_data.get("country")
+                city = geo_data.get("city")
+                publicip = geo_data.get("ip")
+                print(8)
+                return f'This function is executed from the country: {country} {city} {publicip}', 200
+            else:
+                print(9)
+                return 'Could not determine the geographical location.', 500
+        else:
+            print(10)
+            return 'Could not determine the IP address.', 500
+    except Exception as e:
+        return f'An error occurred: {str(e)}', 500
+
+
+
+requirements.txt:
+####################################
+functions-framework==3.*
+requests==2.*
+
+
+
+entry point: "verify_location"
