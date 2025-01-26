@@ -1,0 +1,63 @@
+#!/bin/bash
+
+# Function to calculate the MD5 hash of a file
+calculate_md5() {
+    md5sum "$1" | awk '{print $1}'
+}
+
+# Function to transfer files via SFTP
+transfer_files() {
+    sftp user@hostname << EOF
+        put file1.txt
+        put file2.txt
+        quit
+EOF
+}
+
+# Set the maximum number of retries
+max_retries=5
+
+# Set the initial retry count
+retry_count=0
+
+# Loop until files are transferred successfully or maximum retries are reached
+while [ $retry_count -lt $max_retries ]; do
+    # Attempt to transfer files
+    transfer_files
+
+    # Check the SFTP exit status
+    if [ $? -eq 0 ]; then
+        echo "Files transferred successfully"
+
+        # Calculate the MD5 hash of the original files
+        md5_file1_original=$(calculate_md5 "file1.txt")
+        md5_file2_original=$(calculate_md5 "file2.txt")
+
+        # Download the files from the server
+        scp user@hostname:file1.txt file1_downloaded.txt
+        scp user@hostname:file2.txt file2_downloaded.txt
+
+        # Calculate the MD5 hash of the downloaded files
+        md5_file1_downloaded=$(calculate_md5 "file1_downloaded.txt")
+        md5_file2_downloaded=$(calculate_md5 "file2_downloaded.txt")
+
+        # Compare the MD5 hashes
+        if [ "$md5_file1_original" == "$md5_file1_downloaded" ] && [ "$md5_file2_original" == "$md5_file2_downloaded" ]; then
+            echo "MD5 check passed. Files transferred correctly."
+            break
+        else
+            echo "MD5 check failed. Retrying..."
+            ((retry_count++))
+            sleep 5  # Wait for 5 seconds before retrying
+        fi
+    else
+        echo "Error transferring files. Retrying..."
+        ((retry_count++))
+        sleep 5  # Wait for 5 seconds before retrying
+    fi
+done
+
+# Check if maximum retries reached
+if [ $retry_count -eq $max_retries ]; then
+    echo "Maximum retries reached. Failed to transfer files."
+fi
